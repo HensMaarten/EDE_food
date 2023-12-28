@@ -70,6 +70,8 @@ public class RecipeService {
     public RecipeIngredientUtensil getCompleteRecipe(Long id) {
         Recipe recipe = getRecipeById(id);
         RecipeIngredientUtensil completeRecipe = new RecipeIngredientUtensil();
+        System.out.print(utensilServiceBaseUrl);
+        System.out.print(ingredientServiceBaseUrl);
         List<Utensil> utensils = webClient.get().uri("http://" + utensilServiceBaseUrl + "/api/utensil/getUtensils"
                 ,uriBuilder -> uriBuilder.queryParam("id",recipe.getUtensils()).build())
                 .retrieve()
