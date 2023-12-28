@@ -1,0 +1,74 @@
+services:
+ mongo-ingredients:
+  image: mongo:latest
+  ports:
+    - 27017:27017
+  volumes:
+    - mongodb_ingredients_data:/data/db
+    
+ mysql-recipes:
+  image: mysql:latest
+  ports:
+    - 3308:3306
+  volumes:
+    - mysql_recipes_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ mysql-utensils:
+  image: mysql:latest
+  ports:
+    - 3307:3306
+  volumes:
+    - mysql_utensils_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ ingredients-service:
+  depends_on:
+    - mongo-ingredients
+  image: miverboven/product-service
+  ports:
+    - 8080:8080
+  links:
+    - mongo-ingredients
+  environment:
+   MONGODB_PORT: 27017
+   MONGODB_HOST: mongo-ingredients
+   
+ utensils-service:
+  depends_on:
+    - mysql-utensils
+  image: miverboven/inventory-service
+  ports:
+    - 8082:8082
+  links:
+    - mysql-utensils
+  environment:
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-utensils
+   MYSQL_DB_PORT: 3307
+
+ recipes-service:
+  depends_on:
+    - utensils-service
+    - ingredients-service
+  image: miverboven/order-service
+  ports:
+    - 8081:8081
+  links:
+    - utensils-service
+    - ingredients-service
+  environment:
+   PRODUCT_SERVICE_BASEURL: ingredients-service:8080
+   INVENTORY_INFO_SERVICE_BASEURL: utensils-service:8082
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-recipes
+   MYSQL_DB_PORT: 3308
+
+volumes:
+ mongodb_ingredients_data:
+ mysql_utensils_data:
+ mysql_recipes_data:
