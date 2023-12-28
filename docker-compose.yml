@@ -66,8 +66,8 @@ services:
   networks:
     - backend
   environment:
-   PRODUCT_SERVICE_BASEURL: http://ingredients-service:8080
-   INVENTORY_INFO_SERVICE_BASEURL: http://utensils-service:8082
+   INGREDIENT_SERVICE_BASEURL: ingredients-service:8080
+   UTENSIL_SERVICE_BASEURL: utensils-service:8082
    MYSQL_DB_USERNAME: root
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-recipes
