@@ -22,28 +22,28 @@ spring:
         - id: ingredients-service-get-by-ids
           uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/ingredients
+            - Path=/ingredients/getbyids
             - Method=GET
           filters:
             - SetPath=/api/ingredients/getbyids
         - id: ingredients-service-get-all
           uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/ingredients
+            - Path=/ingredients/all
             - Method=GET
           filters:
             - SetPath=/api/ingredients/all
         - id: ingredients-service-delete
           uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/ingredients
+            - Path=/ingredients/{id}
             - Method=DELETE
           filters:
             - SetPath=/api/ingredients/{id}
         - id: ingredients-service-edit
           uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/ingredients
+            - Path=/ingredients/{id}
             - Method=PUT
           filters:
             - SetPath=/api/ingredients/{id}
@@ -57,28 +57,28 @@ spring:
         - id: utensils-service-get-by-ids
           uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
           predicates:
-            - Path=/utensil
+            - Path=/utensil/getbyids
             - Method=GET
           filters:
             - SetPath=/api/utensil/getUtensils
         - id: utensils-service-get-all
           uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
           predicates:
-            - Path=/utensil
+            - Path=/utensil/all
             - Method=GET
           filters:
             - SetPath=/api/utensil/all
         - id: utensils-service-delete
           uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
           predicates:
-            - Path=/utensil
+            - Path=/utensil/{id}
             - Method=DELETE
           filters:
             - SetPath=/api/utensil/{id}
         - id: utensils-service-edit
           uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
           predicates:
-            - Path=/utensil
+            - Path=/utensil/{id}
             - Method=PUT
           filters:
             - SetPath=/api/utensil/{id}
@@ -92,35 +92,35 @@ spring:
         - id: recipes-service-get-complete
           uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
           predicates:
-            - Path=/recipe
+            - Path=/recipe/complete/{id}
             - Method=GET
           filters:
             - SetPath=/api/recipe/completeRecipe/{id}
         - id: recipes-service-get-all
           uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
           predicates:
-            - Path=/recipe
+            - Path=/recipe/all
             - Method=GET
           filters:
             - SetPath=/api/recipe/all
         - id: recipes-service-delete
           uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
           predicates:
-            - Path=/recipe
+            - Path=/recipe/{id}
             - Method=DELETE
           filters:
             - SetPath=/api/recipe/{id}
         - id: recipes-service-edit
           uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
           predicates:
-            - Path=/recipe
+            - Path=/recipe/{id}
             - Method=PUT
           filters:
             - SetPath=/api/recipe/{id}
         - id: recipes-service-get
           uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
           predicates:
-            - Path=/recipe
+            - Path=/recipe/{id}
             - Method=GET
           filters:
             - SetPath=/api/recipe/{id}

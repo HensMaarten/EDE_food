@@ -1,97 +1,97 @@
 services:
- mongo-ingredients:
-  image: mongo:latest
-  ports:
-    - 27017:27017
-  volumes:
-    - mongodb_ingredients_data:/data/db
-  networks:
-    - backend
-    
- mysql-recipes:
-  image: mysql:latest
-  ports:
-    - 3308:3306
-  volumes:
-    - mysql_recipes_data:/var/lib/mysql
-  environment:
-   MYSQL_ROOT_PASSWORD: abc123
-  networks:
-    - backend
-    
- mysql-utensils:
-  image: mysql:latest
-  ports:
-    - 3307:3306
-  volumes:
-    - mysql_utensils_data:/var/lib/mysql
-  environment:
-   MYSQL_ROOT_PASSWORD: abc123
-  networks:
-    - backend
-    
- ingredients-service:
-  depends_on:
-    - mongo-ingredients
-  image: maartenhens/ingredients-service
-  ports:
-    - 8080:8080
-  networks:
-    - backend
-  environment:
-   MONGODB_PORT: 27017
-   MONGODB_HOST: mongo-ingredients
-   
- utensils-service:
-  depends_on:
-    - mysql-utensils
-  image: maartenhens/utensils-service
-  ports:
-    - 8082:8082
-  networks:
-    - backend
-  environment:
-   MYSQL_DB_USERNAME: root
-   MYSQL_DB_PASSWORD: abc123
-   MYSQL_DB_HOST: mysql-utensils
-   MYSQL_DB_PORT: 3306
+  mongo-ingredients:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_ingredients_data:/data/db
+    networks:
+      - backend
 
- recipes-service:
-  depends_on:
-    - utensils-service
-    - ingredients-service
-  image: maartenhens/recipes-service
-  ports:
-    - 8081:8081
-  networks:
-    - backend
-  environment:
-   INGREDIENT_SERVICE_BASEURL: ingredients-service:8080
-   UTENSIL_SERVICE_BASEURL: utensils-service:8082
-   MYSQL_DB_USERNAME: root
-   MYSQL_DB_PASSWORD: abc123
-   MYSQL_DB_HOST: mysql-recipes
-   MYSQL_DB_PORT: 3306
+  mysql-recipes:
+    image: mysql:latest
+    ports:
+      - 3308:3306
+    volumes:
+      - mysql_recipes_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123
+    networks:
+      - backend
 
- api-gateway:
-   depends_on:
-     - utensils-service
-     - ingredients-service
-     - recipes-service
-   image: maartenhens/ede-api-gateway
-   ports:
-     - 8083:8083
-  networks:
-    - backend
-   environment:
-     INGREDIENT_SERVICE_BASEURL: ingredients-service:8080
-     UTENSIL_SERVICE_BASEURL: utensils-service:8082
-     RECIPES_SERVICE_BASEURL: recipes-service:8081
+  mysql-utensils:
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql_utensils_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123
+    networks:
+      - backend
+
+  ingredients-service:
+    depends_on:
+      - mongo-ingredients
+    image: maartenhens/ingredients-service
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+    environment:
+      MONGODB_PORT: 27017
+      MONGODB_HOST: mongo-ingredients
+
+  utensils-service:
+    depends_on:
+      - mysql-utensils
+    image: maartenhens/utensils-service
+    ports:
+      - 8082:8082
+    networks:
+      - backend
+    environment:
+      MYSQL_DB_USERNAME: root
+      MYSQL_DB_PASSWORD: abc123
+      MYSQL_DB_HOST: mysql-utensils
+      MYSQL_DB_PORT: 3306
+
+  recipes-service:
+    depends_on:
+      - utensils-service
+      - ingredients-service
+    image: maartenhens/recipes-service
+    ports:
+      - 8081:8081
+    networks:
+      - backend
+    environment:
+      INGREDIENT_SERVICE_BASEURL: ingredients-service:8080
+      UTENSIL_SERVICE_BASEURL: utensils-service:8082
+      MYSQL_DB_USERNAME: root
+      MYSQL_DB_PASSWORD: abc123
+      MYSQL_DB_HOST: mysql-recipes
+      MYSQL_DB_PORT: 3306
+
+  api-gateway:
+    depends_on:
+      - utensils-service
+      - ingredients-service
+      - recipes-service
+    image: maartenhens/ede-api-gateway
+    ports:
+      - 8083:8083
+    networks:
+      - backend
+    environment:
+      INGREDIENT_SERVICE_BASEURL: ingredients-service:8080
+      UTENSIL_SERVICE_BASEURL: utensils-service:8082
+      RECIPES_SERVICE_BASEURL: recipes-service:8081
 
 networks:
   backend:
 
 volumes:
- mongodb_ingredients_data:
- mysql_utensils_data:
- mysql_recipes_data:
+  mongodb_ingredients_data:
+  mysql_utensils_data:
+  mysql_recipes_data:
