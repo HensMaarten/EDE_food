@@ -1,0 +1,126 @@
+server:
+  port: 8083
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
+    reactor.netty: TRACE
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: ingredients-service-create
+          uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ingredients
+            - Method=POST
+          filters:
+            - SetPath=/api/ingredients
+        - id: ingredients-service-get-by-ids
+          uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ingredients
+            - Method=GET
+          filters:
+            - SetPath=/api/ingredients/getbyids
+        - id: ingredients-service-get-all
+          uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ingredients
+            - Method=GET
+          filters:
+            - SetPath=/api/ingredients/all
+        - id: ingredients-service-delete
+          uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ingredients
+            - Method=DELETE
+          filters:
+            - SetPath=/api/ingredients/{id}
+        - id: ingredients-service-edit
+          uri: http://${INGREDIENT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/ingredients
+            - Method=PUT
+          filters:
+            - SetPath=/api/ingredients/{id}
+        - id: utensils-service-create
+          uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/utensil
+            - Method=POST
+          filters:
+            - SetPath=/api/utensil
+        - id: utensils-service-get-by-ids
+          uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/utensil
+            - Method=GET
+          filters:
+            - SetPath=/api/utensil/getUtensils
+        - id: utensils-service-get-all
+          uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/utensil
+            - Method=GET
+          filters:
+            - SetPath=/api/utensil/all
+        - id: utensils-service-delete
+          uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/utensil
+            - Method=DELETE
+          filters:
+            - SetPath=/api/utensil/{id}
+        - id: utensils-service-edit
+          uri: http://${UTENSIL_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/utensil
+            - Method=PUT
+          filters:
+            - SetPath=/api/utensil/{id}
+        - id: recipes-service-create
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=POST
+          filters:
+            - SetPath=/api/recipe
+        - id: recipes-service-get-complete
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=GET
+          filters:
+            - SetPath=/api/recipe/completeRecipe/{id}
+        - id: recipes-service-get-all
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=GET
+          filters:
+            - SetPath=/api/recipe/all
+        - id: recipes-service-delete
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=DELETE
+          filters:
+            - SetPath=/api/recipe/{id}
+        - id: recipes-service-edit
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=PUT
+          filters:
+            - SetPath=/api/recipe/{id}
+        - id: recipes-service-get
+          uri: http://${RECIPES_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/recipe
+            - Method=GET
+          filters:
+            - SetPath=/api/recipe/{id}
