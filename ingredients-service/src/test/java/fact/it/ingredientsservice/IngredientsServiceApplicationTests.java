@@ -6,11 +6,14 @@ import fact.it.ingredientsservice.model.Ingredient;
 import fact.it.ingredientsservice.repository.IngredientRepository;
 import fact.it.ingredientsservice.service.IngredientService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
@@ -19,8 +22,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class IngredientsServiceApplicationTests {
 
 	@InjectMocks
@@ -38,7 +43,7 @@ class IngredientsServiceApplicationTests {
 		ingredient.setAmount(500);
 		// Mock the repository response
 
-		Mockito.when(ingredientRepository.findAll()).thenReturn(List.of(ingredient));
+		when(ingredientRepository.findAll()).thenReturn(List.of(ingredient));
 
 		// Call the service method
 		List<IngredientResponse> ingredients = ingredientService.getAllIngredients();
@@ -50,7 +55,7 @@ class IngredientsServiceApplicationTests {
 		assertEquals("gram",ingredients.get(0).getMeasure());
 		assertEquals(500,ingredients.get(0).getAmount());
 
-		Mockito.verify(ingredientRepository, Mockito.times(1)).findAll();
+		verify(ingredientRepository, Mockito.times(1)).findAll();
 	}
 
 	@Test
@@ -69,7 +74,7 @@ class IngredientsServiceApplicationTests {
 
 		List<String> ids = Arrays.asList("1", "2");
 		// Mock the repository response
-		Mockito.when(ingredientRepository.findByIdIn(ids)).thenReturn(Arrays.asList(ingredient, secondIngredient));
+		when(ingredientRepository.findByIdIn(ids)).thenReturn(Arrays.asList(ingredient, secondIngredient));
 
 		// Call the service method
 		List<IngredientResponse> ingredients = ingredientService.getAllIngredientsById(ids);
@@ -87,7 +92,7 @@ class IngredientsServiceApplicationTests {
 		assertEquals("stuks",ingredients.get(1).getMeasure());
 		assertEquals(2,ingredients.get(1).getAmount());
 
-		Mockito.verify(ingredientRepository, Mockito.times(1)).findByIdIn(ids);
+		verify(ingredientRepository, Mockito.times(1)).findByIdIn(ids);
 
 	}
 	@Test
@@ -99,7 +104,7 @@ class IngredientsServiceApplicationTests {
 		ingredient.setMeasure("gram");
 		ingredient.setAmount(500);
 		// Mock the repository response
-		Mockito.when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.of(ingredient));
+		when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.of(ingredient));
 
 		// Call the service method
 		Ingredient foundIngredient = ingredientService.getIngredientById(ingredientId);
@@ -110,7 +115,7 @@ class IngredientsServiceApplicationTests {
 		assertEquals("gram",foundIngredient.getMeasure());
 		assertEquals(500,foundIngredient.getAmount());
 
-		Mockito.verify(ingredientRepository, Mockito.times(1)).findById(ingredientId);
+		verify(ingredientRepository, Mockito.times(1)).findById(ingredientId);
 	}
 
 	@Test
@@ -121,7 +126,7 @@ class IngredientsServiceApplicationTests {
 		ingredientService.createIngredient(ingredientRequest);
 
 		// Verify that save method is called once on the repository
-		Mockito.verify(ingredientRepository, Mockito.times(1)).save(Mockito.any(Ingredient.class));
+		verify(ingredientRepository, Mockito.times(1)).save(Mockito.any(Ingredient.class));
 	}
 
 	@Test
@@ -131,7 +136,7 @@ class IngredientsServiceApplicationTests {
 
 		// Mock the repository response
 		Ingredient ingredientToEdit = new Ingredient();
-		Mockito.when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientToEdit));
+		when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientToEdit));
 
 		// Create ArgumentCaptor to capture the argument passed to save method
 		ArgumentCaptor<Ingredient> ingredientCaptor = ArgumentCaptor.forClass(Ingredient.class);
@@ -140,7 +145,7 @@ class IngredientsServiceApplicationTests {
 		ingredientService.editIngredient(ingredientId, ingredientRequest);
 
 		// Verify that save method is called once on the repository with the captured argument
-		Mockito.verify(ingredientRepository, Mockito.times(1)).save(ingredientCaptor.capture());
+		verify(ingredientRepository, Mockito.times(1)).save(ingredientCaptor.capture());
 
 		// Retrieve the captured argument
 		Ingredient editedIngredient = ingredientCaptor.getValue();
@@ -159,14 +164,14 @@ class IngredientsServiceApplicationTests {
 		ingredientService.deleteIngredient(ingredientId);
 
 		// Verify that deleteById method is called once on the repository
-		Mockito.verify(ingredientRepository, Mockito.times(1)).deleteById(ingredientId);
+		verify(ingredientRepository, Mockito.times(1)).deleteById(ingredientId);
 	}
 
 	@Test
 	public void testGetIngredientByIdNotFound() {
 		String ingredientId = "1";
 		// Mock the repository response
-		Mockito.when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.empty());
+		when(ingredientRepository.findById(ingredientId)).thenReturn(Optional.empty());
 
 		// Verify that the service method throws a ResponseStatusException
 		assertThrows(ResponseStatusException.class, () -> ingredientService.getIngredientById(ingredientId));

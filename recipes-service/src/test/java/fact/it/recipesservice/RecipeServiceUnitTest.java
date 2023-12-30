@@ -10,10 +10,12 @@ import fact.it.recipesservice.repository.RecipeRepository;
 import fact.it.recipesservice.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -34,7 +36,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class RecipeServiceUnitTest {
 
     @InjectMocks
@@ -136,22 +138,24 @@ class RecipeServiceUnitTest {
         recipe.setIngredients(new ArrayList<String>(Arrays.asList("1","2")));
         recipe.setUtensils(new ArrayList<Long>(Arrays.asList(1L,2L)));
 
+
         // Mock the repository response
         when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
 
         // Mock WebClientService response
-        Utensil utensil1 = new Utensil(1L,"Lepel", false);
-        Utensil utensil2 = new Utensil(2L,"Mixer", true);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+
+        Utensil utensil1 = new Utensil(1L,"Lepel", false);
+        Utensil utensil2 = new Utensil(2L,"Mixer", true);
+
+
         when(responseSpec.bodyToFlux(Utensil.class)).thenReturn(Flux.just(utensil1, utensil2));
 
         Ingredient ingredient1 = new Ingredient("1","Bloem", "g", 300);
         Ingredient ingredient2 = new Ingredient("2","Kipfilet", "gram", 500);
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+
         when(responseSpec.bodyToFlux(Ingredient.class)).thenReturn(Flux.just(ingredient1, ingredient2));
 
         // Call the service method
