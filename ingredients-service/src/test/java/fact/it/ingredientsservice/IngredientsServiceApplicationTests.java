@@ -62,10 +62,10 @@ class IngredientsServiceApplicationTests {
 		ingredient.setAmount(500);
 
 		Ingredient secondIngredient = new Ingredient();
-		ingredient.setId("2");
-		ingredient.setName("paprikas");
-		ingredient.setMeasure("stuks");
-		ingredient.setAmount(2);
+		secondIngredient.setId("2");
+		secondIngredient.setName("paprikas");
+		secondIngredient.setMeasure("stuks");
+		secondIngredient.setAmount(2);
 
 		List<String> ids = Arrays.asList("1", "2");
 		// Mock the repository response

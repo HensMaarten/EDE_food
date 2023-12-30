@@ -19,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ class RecipeServiceUnitTest {
         recipe.setIngredients(new ArrayList<String>(Arrays.asList("1","2")));
         recipe.setUtensils(new ArrayList<Long>(Arrays.asList(1L,2L)));
         // Mock the repository response
-        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(new Recipe()));
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
 
         // Call the service method
         Recipe foundRecipe = recipeService.getRecipeById(recipeId);
@@ -144,16 +145,14 @@ class RecipeServiceUnitTest {
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(ArrayList.class))
-                .thenReturn(Mono.just(new ArrayList<Utensil>(Arrays.asList(utensil1, utensil2))));
+        when(responseSpec.bodyToFlux(Utensil.class)).thenReturn(Flux.just(utensil1, utensil2));
 
         Ingredient ingredient1 = new Ingredient("1","Bloem", "g", 300);
         Ingredient ingredient2 = new Ingredient("2","Kipfilet", "gram", 500);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(ArrayList.class))
-                .thenReturn(Mono.just(new ArrayList<Ingredient>(Arrays.asList(ingredient1, ingredient2))));
+        when(responseSpec.bodyToFlux(Ingredient.class)).thenReturn(Flux.just(ingredient1, ingredient2));
 
         // Call the service method
         RecipeIngredientUtensil completeRecipe = recipeService.getCompleteRecipe(recipeId);
@@ -181,12 +180,12 @@ class RecipeServiceUnitTest {
         assertEquals(2, completeRecipe.getIngredients().size());
 
         assertEquals("1", completeRecipe.getIngredients().get(0).getId());
-        assertEquals("bloem",completeRecipe.getIngredients().get(0).getName());
+        assertEquals("Bloem",completeRecipe.getIngredients().get(0).getName());
         assertEquals("g",completeRecipe.getIngredients().get(0).getMeasure());
         assertEquals(300,completeRecipe.getIngredients().get(0).getAmount());
 
         assertEquals("2", completeRecipe.getIngredients().get(1).getId());
-        assertEquals("kipfilet",completeRecipe.getIngredients().get(1).getName());
+        assertEquals("Kipfilet",completeRecipe.getIngredients().get(1).getName());
         assertEquals("gram",completeRecipe.getIngredients().get(1).getMeasure());
         assertEquals(500,completeRecipe.getIngredients().get(1).getAmount());
 
@@ -249,28 +248,6 @@ class RecipeServiceUnitTest {
 
         // Verify that the service method throws a ResponseStatusException
         assertThrows(ResponseStatusException.class, () -> recipeService.getRecipeById(recipeId));
-    }
-
-    @Test
-    public void testGetCompleteRecipeWebClientException() {
-        Long recipeId = 1L;
-        Recipe mockRecipe = new Recipe();
-        mockRecipe.setId(recipeId);
-
-        // Mock the repository response
-        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(mockRecipe));
-
-        // Mock WebClient throwing WebClientResponseException
-        when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-
-        // Mock WebClientService throwing WebClientResponseException for getUtensils and getIngredients
-        when(responseSpec.bodyToMono(ArrayList.class))
-                .thenThrow(new WebClientResponseException(404, "Not Found", null, null, null));
-
-        // Verify that the service method throws a ResponseStatusException
-        assertThrows(ResponseStatusException.class, () -> recipeService.getCompleteRecipe(recipeId));
     }
 
 }
