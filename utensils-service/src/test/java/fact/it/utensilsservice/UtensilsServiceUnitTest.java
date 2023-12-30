@@ -78,7 +78,7 @@ class UtensilsServiceUnitTest {
         assertTrue(utensils.get(0).isRequiresElectricity());
         assertEquals("Mixer",utensils.get(0).getName());
 
-        assertEquals(1L, utensils.get(1).getId());
+        assertEquals(2L, utensils.get(1).getId());
         assertFalse(utensils.get(1).isRequiresElectricity());
         assertEquals("Houten lepel",utensils.get(1).getName());
 
