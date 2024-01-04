@@ -46,23 +46,26 @@ public class IngredientService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Utensil with " + id + " not found"));
     }
 
-    public void createIngredient(IngredientRequest ingredientRequest){
+    public Ingredient createIngredient(IngredientRequest ingredientRequest){
         Ingredient ingredient = Ingredient.builder()
                 .name(ingredientRequest.getName())
                 .measure(ingredientRequest.getMeasure())
                 .amount(ingredientRequest.getAmount())
                 .build();
 
-        ingredientRepository.save(ingredient);
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+
+        return savedIngredient;
     }
-    public void editIngredient(String ingredientId, IngredientRequest ingredientRequest){
+    public Ingredient editIngredient(String ingredientId, IngredientRequest ingredientRequest){
         Ingredient currentIngredient = getIngredientById(ingredientId);
 
         currentIngredient.setName(ingredientRequest.getName());
         currentIngredient.setMeasure(ingredientRequest.getMeasure());
         currentIngredient.setAmount(ingredientRequest.getAmount());
 
-        ingredientRepository.save(currentIngredient);
+        Ingredient savedIngredient = ingredientRepository.save(currentIngredient);
+        return savedIngredient;
     }
     public void deleteIngredient(String ingredientId){
         ingredientRepository.deleteById(ingredientId);

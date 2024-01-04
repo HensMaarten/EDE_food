@@ -8,6 +8,7 @@ import fact.it.recipesservice.model.RecipeIngredientUtensil;
 import fact.it.recipesservice.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,17 +27,18 @@ public class RecipeController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void createRecipe
+    public ResponseEntity<Recipe> createRecipe
             (@RequestBody RecipeRequest recipeRequest) {
-        recipeService.createRecipe(recipeRequest);
+        Recipe recipe = recipeService.createRecipe(recipeRequest);
+        return ResponseEntity.ok(recipe);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Recipe updateRecipe
+    public ResponseEntity<Recipe> updateRecipe
             (@PathVariable Long id,@RequestBody RecipeRequest recipeRequest) {
-        recipeService.editRecipe(id,recipeRequest);
-        return recipeService.getRecipeById(id);
+        Recipe recipe = recipeService.editRecipe(id,recipeRequest);
+        return ResponseEntity.ok(recipe);
     }
 
     @GetMapping("/all")

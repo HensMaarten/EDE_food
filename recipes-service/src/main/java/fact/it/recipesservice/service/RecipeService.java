@@ -89,7 +89,7 @@ public class RecipeService {
     }
 
 
-    public void createRecipe(RecipeRequest recipeRequest){
+    public Recipe createRecipe(RecipeRequest recipeRequest){
         Recipe recipe = Recipe.builder()
                 .name(recipeRequest.getName())
                 .instructions(recipeRequest.getInstructions())
@@ -99,10 +99,11 @@ public class RecipeService {
                 .utensils(recipeRequest.getUtensils())
                 .build();
 
-        recipeRepository.save(recipe);
+       Recipe savedRecipe = recipeRepository.save(recipe);
+       return savedRecipe;
     }
 
-    public void editRecipe(Long recipeId, RecipeRequest recipeRequest){
+    public Recipe editRecipe(Long recipeId, RecipeRequest recipeRequest){
         Recipe currentRecipe = getRecipeById(recipeId);
 
         currentRecipe.setName(recipeRequest.getName());
@@ -112,7 +113,8 @@ public class RecipeService {
         currentRecipe.setIngredients(recipeRequest.getIngredients());
         currentRecipe.setUtensils(recipeRequest.getUtensils());
 
-        recipeRepository.save(currentRecipe);
+        Recipe recipe = recipeRepository.save(currentRecipe);
+        return recipe;
     }
     public void deleteRecipe(Long recipeId){
         recipeRepository.deleteById(recipeId);

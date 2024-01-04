@@ -55,22 +55,24 @@ public class UtensilsService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Utensil with " + id + " not found"));
     }
 
-    public void createUtensil(UtensilRequest utensilRequest){
+    public Utensil createUtensil(UtensilRequest utensilRequest){
         Utensil utensil = Utensil.builder()
                 .name(utensilRequest.getName())
                 .requiresElectricity(utensilRequest.isRequiresElectricity())
                 .build();
 
-        utensilsRepository.save(utensil);
+        Utensil savedUtensil = utensilsRepository.save(utensil);
+        return  savedUtensil;
     }
 
-    public void editUtensil(Long utensilId, UtensilRequest utensilRequest){
+    public Utensil editUtensil(Long utensilId, UtensilRequest utensilRequest){
         Utensil currentUtensil = getUtensilById(utensilId);
 
         currentUtensil.setName(utensilRequest.getName());
         currentUtensil.setRequiresElectricity(utensilRequest.isRequiresElectricity());
 
-        utensilsRepository.save(currentUtensil);
+        Utensil savedUtensil = utensilsRepository.save(currentUtensil);
+        return  savedUtensil;
     }
     public void deleteUtensil(Long utensilId){
         utensilsRepository.deleteById(utensilId);

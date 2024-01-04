@@ -6,6 +6,7 @@ import fact.it.utensilsservice.model.Utensil;
 import fact.it.utensilsservice.service.UtensilsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,17 +25,18 @@ public class UtensilController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void createUtensil
+    public ResponseEntity<Utensil> createUtensil
             (@RequestBody UtensilRequest utensilRequest) {
-        utensilsService.createUtensil(utensilRequest);
+        Utensil savedUtensil = utensilsService.createUtensil(utensilRequest);
+        return ResponseEntity.ok(savedUtensil);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Utensil updateUtensil
+    public ResponseEntity<Utensil> updateUtensil
             (@PathVariable Long id,@RequestBody UtensilRequest utensilRequest) {
-        utensilsService.editUtensil(id,utensilRequest);
-        return utensilsService.getUtensilById(id);
+        Utensil utensil = utensilsService.editUtensil(id,utensilRequest);
+        return ResponseEntity.ok(utensil);
     }
 
     @GetMapping("/getUtensils")

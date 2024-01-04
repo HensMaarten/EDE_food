@@ -6,6 +6,7 @@ import fact.it.ingredientsservice.model.Ingredient;
 import fact.it.ingredientsservice.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +20,11 @@ public class IngredientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void createIngredient
+    public ResponseEntity<Ingredient> createIngredient
             (@RequestBody IngredientRequest ingredientRequest) {
-        ingredientService.createIngredient(ingredientRequest);
+        Ingredient ingredient = ingredientService.createIngredient(ingredientRequest);
+
+        return ResponseEntity.ok(ingredient);
     }
 
     @GetMapping("/getbyids")
@@ -44,9 +47,9 @@ public class IngredientController {
     }
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Ingredient updateIngredient
+    public ResponseEntity<Ingredient> updateIngredient
             (@PathVariable String id,@RequestBody IngredientRequest ingredientRequest) {
-        ingredientService.editIngredient(id,ingredientRequest);
-        return ingredientService.getIngredientById(id);
+        Ingredient ingredient = ingredientService.editIngredient(id,ingredientRequest);
+        return  ResponseEntity.ok(ingredient);
     }
 }
