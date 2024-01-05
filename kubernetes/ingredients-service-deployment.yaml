@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ingredients-service
+  name: ingredients-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ingredients-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/backend: "true"
+        io.kompose.service: ingredients-service
+    spec:
+      containers:
+        - env:
+            - name: MONGODB_HOST
+              value: mongo-ingredients
+            - name: MONGODB_PORT
+              value: "27017"
+          image: maartenhens/ingredients-service
+          name: ingredients-service
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -235,11 +235,21 @@ class RecipeServiceUnitTest {
 
     @Test
     public void testDeleteRecipe() {
+        Recipe foundRecipe = new Recipe();
         Long recipeId = 1L;
+        foundRecipe.setId(recipeId);
+        foundRecipe.setIngredients(Arrays.asList("ingredientId1", "ingredientId2"));
+        foundRecipe.setUtensils(Arrays.asList(1L, 2L));
+
+        when(recipeRepository.findById(1L)).thenReturn(java.util.Optional.of(foundRecipe));
+
+        when(webClient.delete()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
 
         // Call the service method
         recipeService.deleteRecipe(recipeId);
 
+        verify(webClient, Mockito.times(4)).delete();
         // Verify that deleteById method is called once on the repository
         verify(recipeRepository, Mockito.times(1)).deleteById(recipeId);
     }

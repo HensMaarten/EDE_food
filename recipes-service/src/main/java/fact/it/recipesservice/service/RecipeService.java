@@ -117,6 +117,17 @@ public class RecipeService {
         return recipe;
     }
     public void deleteRecipe(Long recipeId){
+        Recipe foundRecipe = getRecipeById(recipeId);
+        for (String ingredientId : foundRecipe.getIngredients()) {
+            webClient.delete().uri("http://" + ingredientServiceBaseUrl
+                    +"/api/ingredients",uriBuilder ->
+                    uriBuilder.queryParam("id",ingredientId).build());
+        }
+        for (Long utensilId : foundRecipe.getUtensils()) {
+            webClient.delete().uri("http://" + utensilServiceBaseUrl
+                    +"/api/utensil",uriBuilder ->
+                    uriBuilder.queryParam("id",utensilId).build());
+        }
         recipeRepository.deleteById(recipeId);
     }
 

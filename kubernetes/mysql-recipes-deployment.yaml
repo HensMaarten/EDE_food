@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysql-recipes
+  name: mysql-recipes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysql-recipes
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/backend: "true"
+        io.kompose.service: mysql-recipes
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          image: mysql:latest
+          name: mysql-recipes
+          ports:
+            - containerPort: 3306
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-recipes-data
+      restartPolicy: Always
+      volumes:
+        - name: mysql-recipes-data
+          persistentVolumeClaim:
+            claimName: mysql-recipes-data
+status: {}
