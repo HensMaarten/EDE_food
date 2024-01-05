@@ -2,6 +2,8 @@
 
 _Ik heb het gehele project lokaal laten werken aangezien ik geen account meer kon aanmaken op Okteto._
 
+Demofilm: https://www.youtube.com/watch?v=LPA5YULx464
+
 Als thema voor het project koos ik ervoor om een backend te maken voor een webapplicatie waar niet ingelogde gebruikers recepten kunnen bekijken en ingelogde gebruikers recepten konden aanmaken, verwijderen en bewerken. Een recept kan natuurlijk niet bestaan zonder ingrediënten, en iets wat veel recepten vergeten te vermelden: het benodigde keukengerei.
 
 ![Alt text](/images/Deployment_diagram.jpg)
