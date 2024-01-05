@@ -4,7 +4,7 @@ _Ik heb het gehele project lokaal laten werken aangezien ik geen account meer ko
 
 Als thema voor het project koos ik ervoor om een backend te maken voor een webapplicatie waar niet ingelogde gebruikers recepten kunnen bekijken en ingelogde gebruikers recepten konden aanmaken, verwijderen en bewerken. Een recept kan natuurlijk niet bestaan zonder ingrediënten, en iets wat veel recepten vergeten te vermelden: het benodigde keukengerei.
 
-![Alt text](/images/Deployment_diagram_MH_2.jpg)
+![Alt text](/images/Deployment_diagram.jpg)
 
 Zo hebben we dus ook meteen onze 3 microservices. De eerste ingredients-service maakt gebruik van een mongoDB. Ik koos hiervoor omdat ik vermoed dat de ingrediënten in de toekomst het snelst van datastructuur zou veranderen (bv. toevoegen van allergieën).
 
