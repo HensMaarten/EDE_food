@@ -1,4 +1,4 @@
-# EDE Project Maarten Hens
+# EDE Maarten Hens
 
 _Ik heb het gehele project lokaal laten werken aangezien ik geen account meer kon aanmaken op Okteto._
 
